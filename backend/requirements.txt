@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-ollama
+pypdf
+chromadb
+umap-learn
+numpy
+scikit-learn
