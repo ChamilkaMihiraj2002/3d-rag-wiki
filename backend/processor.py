@@ -15,6 +15,22 @@ chroma_client = chromadb.PersistentClient(path=VECTOR_STORE_DIR)
 collection = chroma_client.get_or_create_collection(name="rag_wiki")
 embedder = OllamaEmbeddings(model="nomic-embed-text")
 
+def extract_topic(text, fallback_source):
+    if not text:
+        return fallback_source
+
+    for raw_line in text.splitlines():
+        line = " ".join(raw_line.strip().split())
+        if len(line) < 4:
+            continue
+
+        if line.lower().startswith("page "):
+            continue
+
+        return line[:80]
+
+    return fallback_source
+
 def build_coordinates(embeddings):
     if len(embeddings) < 4:
         angles = np.linspace(0, 2 * np.pi, len(embeddings), endpoint=False)
@@ -54,7 +70,14 @@ def process_pdfs_and_build_graph():
 
     # 2. Embed
     texts = [c.page_content for c in chunks]
-    metadatas = [{"source": os.path.basename(c.metadata['source']), "id": str(i)} for i, c in enumerate(chunks)]
+    metadatas = []
+    for i, chunk in enumerate(chunks):
+        source_name = os.path.basename(chunk.metadata["source"])
+        metadatas.append({
+            "source": source_name,
+            "topic": extract_topic(chunk.page_content, source_name),
+            "id": str(i)
+        })
     ids = [str(i) for i in range(len(chunks))]
     
     print(f"Embedding {len(texts)} chunks...")

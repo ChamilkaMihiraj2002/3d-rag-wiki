@@ -2,6 +2,8 @@ import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
 
+const getNodeTitle = node => node.topic || node.file || 'Untitled data';
+
 const shortenName = name => {
   if (!name) return 'Untitled data';
 
@@ -71,7 +73,7 @@ export default function Graph3D({ graphData, activeNodes }) {
   const [isFrozen, setIsFrozen] = useState(false);
   const activeNodeSet = useMemo(() => new Set(activeNodes), [activeNodes]);
   const dataNames = useMemo(() => {
-    const names = graphData.nodes.map(node => node.file).filter(Boolean);
+    const names = graphData.nodes.map(node => getNodeTitle(node)).filter(Boolean);
     return [...new Set(names)].sort((a, b) => a.localeCompare(b));
   }, [graphData.nodes]);
 
@@ -138,10 +140,10 @@ export default function Graph3D({ graphData, activeNodes }) {
         ref={fgRef}
         graphData={graphData}
         backgroundColor="rgba(0,0,0,0)"
-        nodeLabel={node => `${node.file}\nChunk ${node.id}\nClick to focus`}
+        nodeLabel={node => `${getNodeTitle(node)}\n${node.file}\nChunk ${node.id}\nClick to focus`}
         nodeAutoColorBy="file"
         nodeRelSize={7}
-        nodeThreeObject={node => createTextSprite(node.file, activeNodeSet.has(node.id))}
+        nodeThreeObject={node => createTextSprite(getNodeTitle(node), activeNodeSet.has(node.id))}
         nodeThreeObjectExtend
         linkWidth={link => {
           const sourceId = getLinkNodeId(link.source);
@@ -184,10 +186,10 @@ export default function Graph3D({ graphData, activeNodes }) {
       {graphData.nodes.length > 0 && (
         <div className="graph-guide" aria-live="polite">
           <div>
-            <strong>{selectedNode ? selectedNode.file : 'How to explore'}</strong>
+            <strong>{selectedNode ? getNodeTitle(selectedNode) : 'How to explore'}</strong>
             <span>
               {selectedNode
-                ? `Chunk ${selectedNode.id}. Click any node to focus it.`
+                ? `${selectedNode.file} - Chunk ${selectedNode.id}. Click any node to focus it.`
                 : 'Drag to rotate, scroll to zoom, click a node to focus.'}
             </span>
           </div>

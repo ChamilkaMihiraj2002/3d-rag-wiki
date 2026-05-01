@@ -37,7 +37,8 @@ def get_graph_data():
         nodes.append({
             "id": meta["id"],
             "x": meta["x"], "y": meta["y"], "z": meta["z"],
-            "file": meta["source"]
+            "file": meta["source"],
+            "topic": meta.get("topic") or meta["source"]
         })
     
     # Build simple sequential links for the "neural" look
