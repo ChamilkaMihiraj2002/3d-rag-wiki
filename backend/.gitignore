@@ -4,3 +4,6 @@
 ./*.pyc
 ./*.pyo
 ./*.pyd
+data/
+venv/
+vector_store/

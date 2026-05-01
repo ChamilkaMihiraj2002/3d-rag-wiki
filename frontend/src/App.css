@@ -79,6 +79,7 @@ button {
 .graph-toolbar,
 .graph-controls,
 .graph-guide,
+.data-name-panel,
 .status-toast,
 .empty-graph-card,
 .chat-sidebar,
@@ -261,6 +262,45 @@ button {
 .legend-dot.active {
   background: #ffd166;
   box-shadow: 0 0 14px rgba(255, 209, 102, 0.72);
+}
+
+.data-name-panel {
+  position: absolute;
+  left: 28px;
+  bottom: 88px;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100% - 56px));
+  max-height: 220px;
+  padding: 14px;
+  border-radius: 22px;
+}
+
+.data-name-panel strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.data-name-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: auto;
+}
+
+.data-name-chip {
+  max-width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(248, 241, 223, 0.1);
+  border: 1px solid rgba(248, 241, 223, 0.12);
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .status-toast {
@@ -517,6 +557,7 @@ button {
   }
 
   .graph-guide,
+  .data-name-panel,
   .empty-graph-card {
     display: none;
   }
